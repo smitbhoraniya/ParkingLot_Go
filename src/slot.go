@@ -6,22 +6,21 @@ import (
 )
 
 type Slot struct {
-	car    Car
+	car    *Car
 	ticket string
 }
 
-func NewSlot() Slot {
-	return Slot{}
+func NewSlot() *Slot {
+	return &Slot{}
 }
 
-func (s Slot) isFree() bool {
-	var slot Slot
-	return s == slot
+func (s *Slot) isFree() bool {
+	return s.car == nil
 }
 
-func (s *Slot) park(car Car) (string, error) {
+func (s *Slot) park(car *Car) (string, error) {
 	if !s.isFree() {
-		return "", errors.New("Slot is occupied.")
+		return "", errors.New("Slot is occupied")
 	}
 
 	s.car = car
@@ -30,20 +29,20 @@ func (s *Slot) park(car Car) (string, error) {
 	return s.ticket, nil
 }
 
-func (s Slot) isValidTicket(ticket string) bool {
+func (s *Slot) isValidTicket(ticket string) bool {
 	return s.ticket == ticket
 }
 
-func (s *Slot) unPark(ticket string) (Car, error) {
+func (s *Slot) unPark(ticket string) (*Car, error) {
 	if s.isFree() {
-		return Car{}, errors.New("Slot is empty.")
+		return nil, errors.New("Slot is empty")
 	}
 	if !s.isValidTicket(ticket) {
-		return Car{}, errors.New("Invalid ticket.")
+		return nil, errors.New("invalid ticket")
 	}
 
 	res := s.car
-	s.car = Car{}
+	s.car = nil
 	s.ticket = ""
 	return res, nil
 }

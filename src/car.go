@@ -5,6 +5,6 @@ type Car struct {
 	color              CarColor
 }
 
-func NewCar(registrationNumber string, color CarColor) Car {
-	return Car{registrationNumber: registrationNumber, color: color}
+func NewCar(registrationNumber string, color CarColor) *Car {
+	return &Car{registrationNumber: registrationNumber, color: color}
 }

@@ -2,7 +2,15 @@ package src
 
 import "testing"
 
-func TestIsSlotFree(t *testing.T) {
+func TestValidSlot(t *testing.T) {
+	slot := NewSlot()
+
+	if slot == nil {
+		t.Errorf("Car should be created with parameters.")
+	}
+}
+
+func TestSlotShouldBeEmptyWhenCreated(t *testing.T) {
 	slot := NewSlot()
 
 	if !slot.isFree() {
@@ -10,7 +18,7 @@ func TestIsSlotFree(t *testing.T) {
 	}
 }
 
-func TestParkCar(t *testing.T) {
+func TestShouldBeParkCarInEmptySlot(t *testing.T) {
 	car := NewCar("Ab", BLACK)
 	slot := NewSlot()
 
@@ -30,7 +38,7 @@ func TestIsValidParkingTicket(t *testing.T) {
 	}
 }
 
-func TestUnparkCar(t *testing.T) {
+func TestShouldBeUnparkCar(t *testing.T) {
 	car := NewCar("Ab", BLACK)
 	slot := NewSlot()
 

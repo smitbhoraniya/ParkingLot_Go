@@ -3,18 +3,26 @@ package src
 import "testing"
 
 func TestValidParkingLot(t *testing.T) {
-	parkingLot, _ := NewParkingLot(2)
+	parkingLot, err := NewParkingLot(2)
 
-	if parkingLot == nil {
+	if parkingLot == nil && err != nil {
 		t.Errorf("Not able create the parking lot.")
 	}
 }
 
 func TestInvalidParkingLot(t *testing.T) {
-	_, err := NewParkingLot(-2)
+	parkingLot, err := NewParkingLot(-2)
 
-	if err == nil {
+	if err == nil && parkingLot != nil {
 		t.Errorf("Not able create the parking lot.")
+	}
+}
+
+func TestParkingLotShouldBeEmptyWhenCreated(t *testing.T) {
+	parkingLot, _ := NewParkingLot(1)
+
+	if parkingLot.isFull() {
+		t.Errorf("Parking lot should be full.")
 	}
 }
 

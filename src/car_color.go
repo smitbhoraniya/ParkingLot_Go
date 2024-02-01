@@ -1,9 +1,9 @@
 package src
 
-type CarColor string
+type CarColor int
 
 const (
-	BLUE  CarColor = "BLUE"
-	BLACK CarColor = "BLACK"
-	WHITE CarColor = "WHITE"
+	BLUE CarColor = iota
+	BLACK
+	WHITE
 )

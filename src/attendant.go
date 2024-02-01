@@ -7,11 +7,17 @@ import (
 
 type Attendant struct {
 	parkingLots []*ParkingLot
+	strategy    Strategy
 }
 
-func NewAttendant() (*Attendant, error) {
+func NewAttendant(strategies ...Strategy) (*Attendant, error) {
 	attendant := &Attendant{}
 	attendant.parkingLots = []*ParkingLot{}
+	if len(strategies) > 0 {
+		attendant.strategy = strategies[0]
+	} else {
+		attendant.strategy = NEAREST
+	}
 	return attendant, nil
 }
 
@@ -20,8 +26,9 @@ func (a *Attendant) assign(parkingLot *ParkingLot) {
 }
 
 func (a *Attendant) park(car *Car) (string, error) {
-	for i := range a.parkingLots {
-		ticket, err := a.parkingLots[i].park(car)
+	parkingLotsToIterate := a.strategy.GetParkingLots(a.parkingLots)
+	for i := range parkingLotsToIterate {
+		ticket, err := parkingLotsToIterate[i].park(car, a.strategy)
 		if err != nil {
 			fmt.Println(err.Error() + " trying other parking lots.")
 		} else {

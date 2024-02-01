@@ -19,18 +19,24 @@ func NewParkingLot(numberOfSlots int) (*ParkingLot, error) {
 	return parkingLot, nil
 }
 
-func (p *ParkingLot) park(car *Car) (string, error) {
-	for i := range p.slots {
-		if p.slots[i].isFree() {
-			ticket, err := p.slots[i].park(car)
-			if err != nil {
-				return "", errors.New(err.Error())
-			}
-			return ticket, nil
-		}
+func (p *ParkingLot) park(car *Car, strategies ...Strategy) (string, error) {
+	var strategy Strategy
+	if len(strategies) > 0 {
+		strategy = strategies[0]
+	} else {
+		strategy = NEAREST
 	}
 
-	return "", errors.New("parking lot is full")
+	slot := strategy.GetAvailableSlot(p.slots)
+	if slot == nil {
+		return "", errors.New("parking lot is full")
+	}
+
+	ticket, err := slot.park(car)
+	if err != nil {
+		return "", errors.New(err.Error())
+	}
+	return ticket, nil
 }
 
 func (p *ParkingLot) isFull() bool {
@@ -54,4 +60,15 @@ func (p *ParkingLot) unPark(ticket string) (*Car, error) {
 	}
 
 	return nil, errors.New("car is not parked in this parking lot")
+}
+
+func (p *ParkingLot) emptySlotCount() int {
+	count := 0
+	for i := range p.slots {
+		if p.slots[i].isFree() {
+			count++
+		}
+	}
+
+	return count
 }

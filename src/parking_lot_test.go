@@ -86,3 +86,14 @@ func TestUnParkCarUsingWrongTicket(t *testing.T) {
 		t.Errorf("Can not unpark car using wrong ticket.")
 	}
 }
+
+func TestEmptySlotCount(t *testing.T) {
+	parkingLot, _ := NewParkingLot(2)
+	car := NewCar("Ab", WHITE)
+
+	parkingLot.park(car)
+
+	if parkingLot.emptySlotCount() != 1 {
+		t.Errorf("empty slots count should be 1.")
+	}
+}

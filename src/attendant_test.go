@@ -84,3 +84,66 @@ func TestCanNotUnparkCarUsingWrongTicket(t *testing.T) {
 		t.Errorf("Can not un park car using wrong ticket.")
 	}
 }
+
+func TestAssignOneParkingLotToMultipleAttendant(t *testing.T) {
+	attendant, _ := NewAttendant()
+	attendant1, _ := NewAttendant()
+	parkingLot, _ := NewParkingLot(2)
+	attendant.assign(parkingLot)
+	attendant1.assign(parkingLot)
+	car := NewCar("Ab", BLUE)
+	car1 := NewCar("Ed", BLACK)
+
+	attendant.park(car)
+	attendant1.park(car1)
+
+	if !parkingLot.isFull() {
+		t.Errorf("Multiple attendant should be able to park in same parking lot.")
+	}
+}
+
+func TestAttendantCanUnparkCarWhichIsParkByOtherAttendant(t *testing.T) {
+	attendant, _ := NewAttendant()
+	attendant1, _ := NewAttendant()
+	parkingLot, _ := NewParkingLot(2)
+	attendant.assign(parkingLot)
+	attendant1.assign(parkingLot)
+	car := NewCar("Ab", BLUE)
+
+	ticket, _ := attendant.park(car)
+	unparkedCar, _ := attendant1.unPark(ticket)
+
+	if unparkedCar != car {
+		t.Errorf("Attendant should be unpark car which parked by other attendant.")
+	}
+}
+
+func TestParkCarNearestSlot(t *testing.T) {
+	attendant, _ := NewAttendant(NEAREST)
+	parkingLot, _ := NewParkingLot(1)
+	parkingLot1, _ := NewParkingLot(1)
+	car := NewCar("Ab", BLACK)
+	attendant.assign(parkingLot)
+	attendant.assign(parkingLot1)
+
+	attendant.park(car)
+
+	if !parkingLot.isFull() && parkingLot1.isFull() {
+		t.Errorf("Car should be parked in parking lot.")
+	}
+}
+
+func TestParkCarFarthestSlot(t *testing.T) {
+	attendant, _ := NewAttendant(FARTHEST)
+	parkingLot, _ := NewParkingLot(1)
+	parkingLot1, _ := NewParkingLot(1)
+	car := NewCar("Ab", BLACK)
+	attendant.assign(parkingLot)
+	attendant.assign(parkingLot1)
+
+	attendant.park(car)
+
+	if parkingLot.isFull() && !parkingLot1.isFull() {
+		t.Errorf("Car should be parked in parking lot.")
+	}
+}

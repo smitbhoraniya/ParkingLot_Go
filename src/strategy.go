@@ -1,5 +1,7 @@
 package src
 
+import "sort"
+
 type Strategy int
 
 const (
@@ -42,6 +44,22 @@ var strategies = map[Strategy]StrategyFunctions{
 			for i := len(slots) - 1; i >= 0; i-- {
 				if slots[i].isFree() {
 					return slots[i]
+				}
+			}
+			return nil
+		},
+	},
+	DISTRIBUTED: {
+		getParkingLots: func(parkingLots []*ParkingLot) []*ParkingLot {
+			sort.Slice(parkingLots, func(i, j int) bool {
+				return parkingLots[i].emptySlotCount() > parkingLots[j].emptySlotCount()
+			})
+			return parkingLots
+		},
+		getSlot: func(slots []*Slot) *Slot {
+			for _, slot := range slots {
+				if slot.isFree() {
+					return slot
 				}
 			}
 			return nil

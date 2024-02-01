@@ -147,3 +147,20 @@ func TestParkCarFarthestSlot(t *testing.T) {
 		t.Errorf("Car should be parked in parking lot.")
 	}
 }
+
+func TestParkCarsUsingDistributedStrategy(t *testing.T) {
+	attendant, _ := NewAttendant(DISTRIBUTED)
+	parkingLot, _ := NewParkingLot(2)
+	parkingLot1, _ := NewParkingLot(2)
+	car := NewCar("Ab", BLACK)
+	car1 := NewCar("Ef", BLACK)
+	attendant.assign(parkingLot)
+	attendant.assign(parkingLot1)
+
+	attendant.park(car)
+	attendant.park(car1)
+
+	if parkingLot.isFull() && parkingLot1.isFull() {
+		t.Errorf("Cars should be park equaly in parking lots.")
+	}
+}
